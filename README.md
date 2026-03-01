@@ -3,13 +3,6 @@
 ![Interfaz del Programa](ejemplo.jpg)
 
 
-
-## Topics
-
-`python` · `steganography` · `video-encoding` · `data-storage` · `ffmpeg` · `customtkinter` · `numpy` · `gpu-acceleration` · `file-recovery` · `binary-encoding`
-
----
-
 ## 🧠 ¿Cómo funciona?
 
 ### ⬛⬜ Escala de Grises
