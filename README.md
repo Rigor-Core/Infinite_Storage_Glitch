@@ -2,7 +2,7 @@
 
 ![Interfaz del Programa](ejemplo.jpg)
 
-**Infinite Storage Glitch** es una herramienta que permite **guardar archivos de cualquier tipo dentro de videos** codificándolos como patrones de píxeles en blanco y negro. Cada bit del archivo se convierte en un macro-píxel visible, creando un video que puede almacenarse en cualquier plataforma. Luego, el proceso se revierte para recuperar el archivo original con total fidelidad.
+
 
 ## Topics
 
