@@ -75,7 +75,7 @@ infinite-storage-glitch/
 │   └── decoder.py             # Decodificación video → archivo
 └── ui/                        # Interfaz gráfica
     ├── __init__.py
-    ├── app.py                 # Ventana principal + watermark
+    ├── app.py                 # Ventana principal
     └── tabs/
         ├── __init__.py
         ├── encode_tab.py      # Pestaña de codificación
