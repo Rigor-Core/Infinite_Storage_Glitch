@@ -1,7 +1,7 @@
-"""Main application window for Infinite Storage Glitch.
+"""
+Main application window for Infinite Storage Glitch.
 
-Assembles all UI tabs, manages the message queue for background tasks,
-and displays the "Rigor Core" watermark.
+Assembles all UI tabs, manages the message queue for background tasks.
 """
 
 import queue
@@ -89,7 +89,6 @@ class App(ctk.CTk):
         self.log_box.grid(row=3, column=0, padx=20, pady=(0, 5), sticky="ew")
 
     def _build_watermark(self):
-        """Add the 'Rigor Core' watermark in the bottom-left corner."""
         watermark = ctk.CTkLabel(
             self,
             text="Rigor Core",
