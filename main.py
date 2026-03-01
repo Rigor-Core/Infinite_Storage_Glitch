@@ -1,4 +1,5 @@
-"""Infinite Storage Glitch — Entry Point.
+"""
+Infinite Storage Glitch — Entry Point.
 
 Encodes files into video streams and recovers them back.
 """
