@@ -1,74 +1,94 @@
-# ♾️ Infinite Storage Glitch (ISG) - Edición GPU 🚀
+# ♾️ Infinite Storage Glitch (ISG)
 
 ![Interfaz del Programa](ejemplo.jpg)
 
-¡Bienvenido a **Infinite Storage Glitch**! Este proyecto es una herramienta loca y genial que te permite **guardar archivos de cualquier tipo dentro de videos** 📹. Sí, leíste bien. Convertimos tus archivos en "ruido" visual (píxeles blancos y negros) que puedes subir a YouTube (o cualquier sitio de video) y obtener **almacenamiento ilimitado y gratuito**. 🤯
+**Infinite Storage Glitch** es una herramienta que permite **guardar archivos de cualquier tipo dentro de videos** codificándolos como patrones de píxeles en blanco y negro. Cada bit del archivo se convierte en un macro-píxel visible, creando un video que puede almacenarse en cualquier plataforma. Luego, el proceso se revierte para recuperar el archivo original con total fidelidad.
 
-## 🧠 ¿Cómo funciona la Magia? (Lógica Detallada)
+## Topics
 
-Aquí te explico el "detrás de cámaras" de por qué el código es como es. 👇
+`python` · `steganography` · `video-encoding` · `data-storage` · `ffmpeg` · `customtkinter` · `numpy` · `gpu-acceleration` · `file-recovery` · `binary-encoding`
 
-### 1. ⬛⬜ ¿Por qué Grises (Grayscale)?
-En lugar de usar colores (RGB), usamos **Escala de Grises** (blanco y negro puro).
-*   **Razón**: La compresión de video de YouTube (y otros) es brutal con el color (submuestreo de croma). Sin embargo, la **luminancia** (el brillo, o blanco/negro) se conserva con mucha más fidelidad.
-*   **En el código**: Convertimos tus bits (0s y 1s) directamente a píxeles: `0` -> Blanco (255), `1` -> Negro (0). Esto maximiza el contraste y facilita que el programa recupere los datos incluso si el video se ve un poco "borroso".
+---
 
-### 2. 🧱 Píxeles de 4x4 (Macro-Píxeles)
-Si miras el código, verás una constante `pixel_size = 4`. Esto significa que cada "bit" de tu archivo no es 1 píxel de pantalla, sino un bloque de **4x4 píxeles**.
-*   **¿Por qué?**: Si usáramos 1 píxel por bit, la compresión de video (H.264/VP9) destruiría la información al intentar "suavizar" la imagen.
-*   **La Solución**: Al hacer los "píxeles de datos" más grandes (bloques de 4x4), creamos una redundancia masiva. Incluso si YouTube comprime los bordes del bloque, el centro del bloque (que es lo que leemos) se mantiene intacto. ¡Es como un escudo contra la compresión! 🛡️
+## 🧠 ¿Cómo funciona?
 
-### 3. 🏷️ La Cabecera Inteligente (Smart Header)
-No solo guardamos "ruido". Al principio de cada video, inyectamos una **Cabecera Oculta** (Metadata).
-*   **Estructura**: `[MAGIC "ISG2"] + [Largo del Header] + [JSON con Datos]`
-*   **¿Qué guarda?**:
-    *   📄 **Nombre original del archivo**: Para que al recuperarlo no se llame "video_recuperado.bin".
-    *   💾 **Tamaño exacto**: Para cortar los bytes de relleno al final.
-    *   ⚙️ **Versión**: Para saber con qué versión se creó.
-*   **Magia**: Cuando cargas un video para decodificar, el programa lee estos primeros bytes y te dice: *"¡Hey! Encontré un archivo llamado 'foto_secreta.jpg' dentro de este video. ¿Quieres recuperarlo?"*. 😎
+### ⬛⬜ Escala de Grises
+Los bits del archivo se representan como píxeles blancos (`0`) y negros (`1`). Se usa escala de grises porque la compresión de video preserva mejor la luminancia que la crominancia.
 
-### 4. ⚡ Aceleración por GPU
-El código detecta si tienes **NVIDIA**, **AMD** o **Intel** y usa comandos especiales de `ffmpeg` (`h264_nvenc`, `h264_amf`, etc.) para que la conversión sea **ultra rápida**. ¡Nada de esperar horas!
+### 🧱 Macro-Píxeles 4×4
+Cada bit ocupa un bloque de **4×4 píxeles** para crear redundancia ante la compresión de video. El decodificador muestrea el centro de cada bloque, donde la información se preserva mejor.
+
+### 🏷️ Cabecera ISG2
+Cada video incluye una cabecera oculta con metadatos del archivo original:
+```
+[MAGIC "ISG2"] + [Largo Header] + [JSON {filename, size}]
+```
+
+### ⚡ Aceleración GPU
+Soporte para codificación acelerada por hardware:
+- **NVIDIA** → `h264_nvenc`
+- **AMD** → `h264_amf`
+- **Intel** → `h264_qsv`
+- **CPU** → `libx264`
 
 ---
 
 ## 🛠️ Requisitos e Instalación
 
-Necesitas tener **Python** y **FFmpeg** instalados.
+Necesitas **Python 3.8+** y **FFmpeg** instalados.
 
-1.  **Instala las librerías de Python**:
-    ```bash
-    pip install -r requirements.txt
-    ```
-    *(Esto instalará `customtkinter`, `numpy` y `yt-dlp`)*
+1. **Instalar dependencias de Python**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-2.  **Instala FFmpeg**:
-    *   Es el motor que hace todo el trabajo duro de video. Asegúrate de que `ffmpeg` esté en tu variable de entorno PATH.
+2. **Instalar FFmpeg**:
+   Asegúrate de que `ffmpeg` y `ffprobe` estén en tu variable de entorno PATH.
+
+---
 
 ## 🚀 Cómo Usar
 
-### 📤 Codificar (Subir Archivo)
-1.  Abre la app.
-2.  Ve a la pestaña **"Codificar"**.
-3.  Selecciona tu archivo.
-4.  Elige tu GPU (o CPU si eres humilde).
-5.  Dale a **"Generar Video"**.
-6.  ¡Sube ese video a YouTube!
+```bash
+python main.py
+```
 
-### 📥 Decodificar (Recuperar Archivo)
-1.  Ve a la pestaña **"YouTube"** y pega el link del video (o descarga el video manualmente).
-2.  Ve a la pestaña **"Decodificar"**.
-3.  Selecciona el video descargado.
-4.  Dale a **"Analizar y Recuperar"**.
-5.  ¡Magia! Tu archivo original aparecerá en la carpeta de salida. ✨
+### 📤 Codificar (Archivo → Video)
+1. Ve a la pestaña **"Codificar"**.
+2. Selecciona tu archivo con **"Examinar"**.
+3. Elige tu encoder (CPU, NVIDIA, AMD, Intel).
+4. Pulsa **"INICIAR CODIFICACIÓN"** y guarda el .mp4.
+
+### 📥 Decodificar (Video → Archivo)
+1. Ve a la pestaña **"Decodificar"**.
+2. Selecciona el video con **"Buscar Video"**.
+3. Elige la carpeta de salida.
+4. Pulsa **"RECUPERAR ARCHIVOS"**.
+5. Tu archivo original aparecerá en la carpeta de salida.
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+infinite-storage-glitch/
+├── main.py                    # Punto de entrada
+├── requirements.txt           # Dependencias
+├── ejemplo.jpg                # Captura de pantalla
+├── core/                      # Lógica de negocio
+│   ├── __init__.py
+│   ├── utils.py               # BaseProcessor y utilidades compartidas
+│   ├── encoder.py             # Codificación archivo → video
+│   └── decoder.py             # Decodificación video → archivo
+└── ui/                        # Interfaz gráfica
+    ├── __init__.py
+    ├── app.py                 # Ventana principal + watermark
+    └── tabs/
+        ├── __init__.py
+        ├── encode_tab.py      # Pestaña de codificación
+        └── decode_tab.py      # Pestaña de decodificación
+```
 
 ---
 
-## 🤓 Estructura del Proyecto
-
-*   `main.py`: El cerebro de la operación. Contiene la interfaz gráfica (CustomTkinter) y la lógica de codificación/decodificación.
-*   `requirements.txt`: Lista de ingredientes necesarios.
-*   `README.md`: Este hermoso manual que estás leyendo.
-
----
-*Creado con ❤️ y un poco de locura por el equipo de Infinite Storage Glitch.*
+*Rigor Core — Infinite Storage Glitch*
